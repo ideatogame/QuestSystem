@@ -23,16 +23,21 @@ namespace UI
         private void Awake()
         {
             SetCanvasState(false);
-            
-            NewQuest.OnNewQuestWindowStateChanged += SetCanvasState;
+
+            NewQuest.OnQuestSelecting += ShowCanvas;
+            NewQuest.OnQuestUnselecting += HideCanvas;
             QuestGoal.OnQuestGoalProgress += SetQuestGoals;
             
             acceptButton.onClick.AddListener(AcceptQuest);
         }
-        
+
+        private void ShowCanvas(Quest quest) => SetCanvasState(true);
+        private void HideCanvas() => SetCanvasState(false);
+
         private void OnDestroy()
         {
-            NewQuest.OnNewQuestWindowStateChanged -= SetCanvasState;
+            NewQuest.OnQuestSelecting -= ShowCanvas;
+            NewQuest.OnQuestUnselecting -= HideCanvas;
             QuestGoal.OnQuestGoalProgress -= SetQuestGoals;
         }
         
@@ -81,7 +86,7 @@ namespace UI
                 return;
             
             SetCanvasState(false);
-            QuestInputSubject.AcceptQuest(selectedQuest);
+            QuestInputManager.AcceptQuest(selectedQuest);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace UI
         
         private void HandleAbandonButton()
         {
-            QuestInputSubject.AbandonQuest(activeQuest);
+            QuestInputManager.AbandonQuest(activeQuest);
             ClearUI();
         }
 

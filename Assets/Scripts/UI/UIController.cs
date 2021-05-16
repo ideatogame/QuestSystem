@@ -16,12 +16,12 @@ namespace UI
                 PlayerStats.OnStatsChanged += HandleStatsChanged;
 
             if (newQuestUI != null)
-                NewQuest.OnQuestSelection += HandleQuestSelection;
+                NewQuest.OnQuestSelecting += HandleQuestSelecting;
 
             if (questListUI != null)
             {
                 PlayerQuests.OnNewQuestAdded += HandleQuestAdded;
-                QuestInputSubject.OnQuestAbandoned += HandleAbandonButtonPressed;
+                QuestInputManager.OnQuestAbandoned += HandleAbandonButtonPressed;
             }
         }
 
@@ -31,12 +31,12 @@ namespace UI
                 PlayerStats.OnStatsChanged -= HandleStatsChanged;
             
             if (newQuestUI != null)
-                NewQuest.OnQuestSelection -= HandleQuestSelection;
+                NewQuest.OnQuestSelecting -= HandleQuestSelecting;
             
             if (questListUI != null)
             {
                 PlayerQuests.OnNewQuestAdded -= HandleQuestAdded;
-                QuestInputSubject.OnQuestAbandoned -= HandleAbandonButtonPressed;
+                QuestInputManager.OnQuestAbandoned -= HandleAbandonButtonPressed;
             }
         }
         
@@ -50,7 +50,7 @@ namespace UI
             questListUI.AddQuest(quest);
         }
         
-        private void HandleQuestSelection(Quest quest)
+        private void HandleQuestSelecting(Quest quest)
         {
             newQuestUI.Bind(quest);
         }

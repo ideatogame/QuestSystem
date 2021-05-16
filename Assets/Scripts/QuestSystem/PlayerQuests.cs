@@ -11,17 +11,17 @@ namespace QuestSystem
 
         private void OnEnable()
         {
-            QuestInputSubject.OnQuestAccepted += AddNewQuest;
-            QuestInputSubject.OnQuestAbandoned += RemoveQuest;
+            QuestInputManager.OnQuestAccepted += AddQuest;
+            QuestInputManager.OnQuestAbandoned += RemoveQuest;
         }
 
         private void OnDisable()
         {
-            QuestInputSubject.OnQuestAccepted -= AddNewQuest;
-            QuestInputSubject.OnQuestAbandoned -= RemoveQuest;
+            QuestInputManager.OnQuestAccepted -= AddQuest;
+            QuestInputManager.OnQuestAbandoned -= RemoveQuest;
         }
 
-        private void AddNewQuest(Quest quest)
+        private void AddQuest(Quest quest)
         {
             activeQuests.Add(quest);
             quest.EnableQuest();

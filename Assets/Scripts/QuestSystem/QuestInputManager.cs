@@ -2,19 +2,19 @@
 
 namespace QuestSystem
 {
-    public struct QuestInputSubject
+    public static class QuestInputManager
     {
         public static event Action<Quest> OnQuestAccepted = delegate { };
         public static event Action<Quest> OnQuestAbandoned = delegate { };
 
         public static void AcceptQuest(Quest quest)
         {
-            OnQuestAccepted?.Invoke(quest);
+            OnQuestAccepted(quest);
         }
 
         public static void AbandonQuest(Quest quest)
         {
-            OnQuestAbandoned?.Invoke(quest);
+            OnQuestAbandoned(quest);
         }
     }
 }

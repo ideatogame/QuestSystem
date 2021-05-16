@@ -19,7 +19,7 @@ namespace UI
         {
             SetUIWindowState(false);
             
-            QuestInputSubject.OnQuestAbandoned += RemoveQuest;
+            QuestInputManager.OnQuestAbandoned += RemoveQuest;
             PlayerQuests.OnNewQuestAdded += AddQuest;
             Quest.OnQuestCompleted += RemoveQuest;
             
@@ -36,7 +36,7 @@ namespace UI
 
         private void OnDestroy()
         {
-            QuestInputSubject.OnQuestAbandoned -= RemoveQuest;
+            QuestInputManager.OnQuestAbandoned -= RemoveQuest;
             PlayerQuests.OnNewQuestAdded -= AddQuest;
             Quest.OnQuestCompleted -= RemoveQuest;
         }

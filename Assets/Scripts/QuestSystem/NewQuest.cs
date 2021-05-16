@@ -8,8 +8,8 @@ namespace QuestSystem
 {
     public class NewQuest : MonoBehaviour
     {
-        public static event Action<Quest> OnQuestSelection = delegate {  };
-        public static event Action<bool> OnNewQuestWindowStateChanged = delegate {  };
+        public static event Action<Quest> OnQuestSelecting = delegate {  };
+        public static event Action OnQuestUnselecting = delegate {  };
 
         [Header("Parameters")]
         [SerializeField] private string questName;
@@ -20,66 +20,60 @@ namespace QuestSystem
         [SerializeField] private UnityEvent onQuestEnabled;
         
         private Quest newQuest;
-        private bool questAvailable;
+        private bool questIsAvailable;
 
         private void OnEnable()
         {
-            QuestInputSubject.OnQuestAbandoned += RegenerateOnAbandon;
+            QuestInputManager.OnQuestAbandoned += RegenerateOnAbandon;
             GenerateQuest();
         }
 
         private void OnDisable()
         {
-            QuestInputSubject.OnQuestAbandoned -= RegenerateOnAbandon;
+            QuestInputManager.OnQuestAbandoned -= RegenerateOnAbandon;
         }
         
         public void SelectNewQuest()
         {
-            if(!questAvailable)
-                return;
-            
-            OnQuestSelection?.Invoke(newQuest);
-            OnNewQuestWindowStateChanged?.Invoke(true);
+            if(!questIsAvailable) return;
+            OnQuestSelecting(newQuest);
         }
 
         public void UnselectNewQuest()
         {
-            if(!questAvailable)
-                return;
-            
-            OnNewQuestWindowStateChanged?.Invoke(false);
+            if(!questIsAvailable) return;
+            OnQuestUnselecting();
         }
         
-        private void RegenerateOnAbandon(Quest quest)
-        {
-            if (quest != newQuest || newQuest == null)
-                return;
-            
-            newQuest.DisableQuest();
-            GenerateQuest();
-        }
-
         private void GenerateQuest()
         {
             List<QuestGoal> goals = GetComponentsInChildren<QuestGoal>().ToList();
             List<QuestReward> rewards = GetComponentsInChildren<QuestReward>().ToList();
             
             newQuest = new Quest(questName, questDescription, goals, rewards);
-            questAvailable = true;
+            questIsAvailable = true;
             onQuestEnabled.Invoke();
             
-            QuestInputSubject.OnQuestAccepted += DisableQuest;
+            QuestInputManager.OnQuestAccepted += DisableQuest;
+        }
+        
+        private void RegenerateOnAbandon(Quest quest)
+        {
+            bool isTheWrongQuest = quest != newQuest;
+            bool questIsNotValid = isTheWrongQuest || newQuest == null;
+            
+            if (questIsNotValid) return;
+            newQuest.DisableQuest();
+            GenerateQuest();
         }
 
         private void DisableQuest(Quest quest)
         {
-            if (quest != newQuest)
-                return;
+            if (quest != newQuest) return;
             
-            QuestInputSubject.OnQuestAccepted -= DisableQuest;
-            questAvailable = false;
+            QuestInputManager.OnQuestAccepted -= DisableQuest;
+            questIsAvailable = false;
             onQuestDisabled.Invoke();
         }
-
     }
 }
